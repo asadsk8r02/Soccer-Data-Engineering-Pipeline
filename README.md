@@ -61,7 +61,7 @@ Using Apache Spark’s JDBC connector, raw data is pulled from PostgreSQL. This 
 
 ## Analysis & Visualization with Tableau & Jupyter Notebooks
 
-Tableau dashboards offer interactive visualizations covering player statistics, match results, and seasonal performance trends. For ad-hoc analysis, Jupyter Notebooks are also utilized. The 8 Tableau dashboards include:
+Tableau dashboards offer interactive visualizations covering player statistics, match results, and seasonal performance trends. For ad-hoc analysis, Jupyter Notebooks are also utilized.
 
 ## Orchestration with Apache Airflow
 
