@@ -1,6 +1,6 @@
 # Soccer ETL Data Pipeline
 
-This project establishes a robust data engineering pipeline designed to gather, transform, and examine data related to Soccer Club’s players, goalkeepers, and match records spanning from 2017 to 2023. It generates valuable insights into individual player statistics, game results, and goalkeeper performance trends.
+This project establishes a robust ETL data engineering pipeline designed to gather, transform, and examine data related to Soccer Club’s players, goalkeepers, and match records spanning from 2017 to 2023. It generates valuable insights into individual player statistics, game results, and goalkeeper performance trends.
 
 ## Tech stack & Tools
 
