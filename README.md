@@ -32,8 +32,10 @@ Navigate to the Docker_files directory.
 
 ## Build the infrastructure:
 
-<pre> <code> cd /path/to/Docker_files
-docker-compose up -d</code> </pre>
+<pre><code>
+cd /path/to/Docker_files
+docker-compose up -d
+</code></pre>
 
 The containers should look like this: 
 <img width="1249" alt="image" src="https://github.com/user-attachments/assets/50f2a08b-b026-4eaa-a397-f6b967aead10">
@@ -47,8 +49,9 @@ After running the notebooks check the postgres container again to verify.
 
 Execute ETL pipeline by accessing the Airflow UI, which will load data into PostgreSQL within the arsenalfc database (DWH schemas).
 To access the Airflow UI:
-<pre> <code> 
-http://localhost:8090/</code> </pre>
+<pre><code> 
+http://localhost:8090/
+</code> </pre>
 
 You will soccerdag DAG in the Apache Airflow UI. Run it and check logs for any error.
 
