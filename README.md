@@ -53,7 +53,7 @@ To access the Airflow UI:
 http://localhost:8090/
 </code> </pre>
 
-You will soccerdag DAG in the Apache Airflow UI. Run it and check logs for any error.
+You will see soccerdag DAG in the Apache Airflow UI. Run it and check logs for any error.
 
 Connect PostgreSQL to Tableau:
 Open Tableau and select PostgreSQL as the data source.
