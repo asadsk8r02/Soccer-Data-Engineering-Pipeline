@@ -35,6 +35,9 @@ Navigate to the Docker_files directory.
 <pre> <code> cd /path/to/docker_folder
 docker-compose up -d</code> </pre>
 
+The containers should look like this: 
+<img width="1249" alt="image" src="https://github.com/user-attachments/assets/50f2a08b-b026-4eaa-a397-f6b967aead10">
+
 Access Jupyter at http://localhost:8085/.
 
 Execute ETL tasks by running the Jupyter notebooks, which will load data into PostgreSQL within the arsenalfc database (DWH schemas).
