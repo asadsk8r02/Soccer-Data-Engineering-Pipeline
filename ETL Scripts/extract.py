@@ -3,46 +3,58 @@ from pyspark.sql.functions import *
 
 def create_spark_session():
     """Create and return a Spark session."""
-    spark = SparkSession.builder.config("spark.jars", "/Drivers/SQL_Sever/jdbc/postgresql-42.7.3.jar").getOrCreate()
+    spark = SparkSession.builder \
+        .config("spark.jars", "/Drivers/SQL_Server/jdbc/postgresql-42.7.3.jar") \
+        .getOrCreate()
     return spark
 
-def read_and_write_csv_to_postgres(spark, csv_path, db_table):
-    """
-    Read a CSV file into a DataFrame and write it to a PostgreSQL table.
-    
-    Parameters:
-    - spark: The Spark session.
-    - csv_path: Path to the CSV file.
-    - db_table: Name of the database table where data will be written.
-    """
-    df = spark.read.csv(csv_path, header=True)
+def table_exists(spark, jdbc_url, connection_properties, table_name):
+    """Check if a table exists in the PostgreSQL database."""
+    query = f"(SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = '{table_name}') AS t"
+    try:
+        df = spark.read.jdbc(url=jdbc_url, table=query, properties=connection_properties)
+        return df.count() > 0
+    except Exception:
+        return False
+
+def read_and_write_csv_to_postgres(spark, csv_path, db_table, jdbc_url, connection_properties):
+    """Read a CSV file into a DataFrame and write it to PostgreSQL."""
+    df = spark.read.csv(csv_path, header=True, inferSchema=True)
+
+    # Determine write mode based on whether the table exists
+    if table_exists(spark, jdbc_url, connection_properties, db_table):
+        write_mode = "overwrite"
+    else:
+        write_mode = "append"
+
     df.write.format("jdbc") \
-        .option("url", "jdbc:postgresql://postgres:5432/arsenalfc") \
-        .option("driver", "org.postgresql.Driver") \
+        .option("url", jdbc_url) \
         .option("dbtable", db_table) \
-        .option("user", "postgres") \
-        .option("password", "postgres") \
-        .mode("overwrite") \
+        .option("user", connection_properties["user"]) \
+        .option("password", connection_properties["password"]) \
+        .option("driver", connection_properties["driver"]) \
+        .mode(write_mode) \
         .save()
 
 def main():
-    """Main function to execute the ETL process."""
     spark = create_spark_session()
 
-    # Paths to the CSV files
-    matches_csv_path = "../data/matches.csv"
-    goalkeepers_csv_path = "../data/goalkeepers.csv"
-    players_csv_path = "../data/players.csv"
+    jdbc_url = "jdbc:postgresql://postgres:5432/arsenalfc"
+    connection_properties = {
+        "user": "postgres",
+        "password": "postgres",
+        "driver": "org.postgresql.Driver"
+    }
 
-    # Database table names
-    matches_db_table = "arsenalmatches"
-    goalkeepers_db_table = "arsenalGK"
-    players_db_table = "arsenalPlayers"
+    # Define CSV file paths and corresponding database tables
+    data_files = {
+        "/tmp/data/matches.csv": "arsenalmatches",
+        "/tmp/data/goalkeepers.csv": "arsenalgk",
+        "/tmp/data/players.csv": "arsenalplayers"
+    }
 
-    # Process each CSV file
-    read_and_write_csv_to_postgres(spark, matches_csv_path, matches_db_table)
-    read_and_write_csv_to_postgres(spark, goalkeepers_csv_path, goalkeepers_db_table)
-    read_and_write_csv_to_postgres(spark, players_csv_path, players_db_table)
+    for csv_path, db_table in data_files.items():
+        read_and_write_csv_to_postgres(spark, csv_path, db_table, jdbc_url, connection_properties)
 
 if __name__ == "__main__":
     main()
